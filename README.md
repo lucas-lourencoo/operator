@@ -1,24 +1,24 @@
 # devroast
 
-> paste your code. get roasted.
+> cole seu código. prepare-se para o esculacho.
 
-Welcome to **devroast**, the brutally honest code analysis platform designed for developers who can handle a little sarcasm. No more sugar-coated reviews—just raw, unfiltered feedback on your code.
+Bem-vindo ao **devroast**, a plataforma de análise de código brutalmente honesta, feita para desenvolvedores que aguentam um pouco de sarcasmo. Chega de revisões "mão com açúcar" — aqui o feedback é cru, direto e sem filtros.
 
-## ✨ Core Features
+## ✨ Funcionalidades Principais
 
-- **Code Roasting Engine:** Paste your code and receive a sharp, technical analysis that doesn't hold back.
-- **Roast Mode:** Toggle maximum sarcasm for the ultimate feedback experience.
-- **Analysis Cards:** Get detailed, color-coded insights into critical errors, warnings, and architectural smells.
-- **Score Ring:** A quick visual indicator of your code's quality, ranging from "Critical" to "Good."
-- **Shame Leaderboard:** See where your code ranks among the most questionable snippets on the internet.
-- **Syntax Highlighting:** Beautifully formatted code blocks with full language support.
+- **Motor de Esculacho (Roasting):** Cole seu código e receba uma análise técnica afiada que não poupa ninguém.
+- **Modo Roast:** Ative o sarcasmo máximo para a experiência definitiva de feedback.
+- **Cards de Análise:** Insights detalhados e coloridos sobre erros críticos, avisos e "cheiros" (smells) arquiteturais.
+- **Anel de Pontuação (Score Ring):** Um indicador visual rápido da qualidade do seu código, variando de "Crítico" a "Bom".
+- **Ranking da Vergonha (Shame Leaderboard):** Veja onde seu código se posiciona entre os trechos mais questionáveis da internet.
+- **Destaque de Sintaxe:** Blocos de código formatados com suporte completo a diversas linguagens.
 
-## 🚀 How it Works
+## 🚀 Como Funciona
 
-1. **Paste:** Drop your code snippet into the editor.
-2. **Review:** Receive an instant score and a list of improvements.
-3. **Laugh (or Cry):** Enjoy the brutally honest feedback and learn how to write better code.
+1. **Cole:** Jogue seu trecho de código no editor.
+2. **Revise:** Receba uma pontuação instantânea e uma lista de melhorias.
+3. **Ria (ou Chore):** Aproveite o feedback brutalmente honesto e aprenda a escrever códigos melhores.
 
 ---
 
-*Part of the DevRoast Ecosystem.*
+*Parte do Ecossistema DevRoast.*
