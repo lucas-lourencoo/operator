@@ -1,7 +1,7 @@
 import { ScoreRing } from "@/components/ui/score-ring";
 import { BadgeRoot, BadgeDot } from "@/components/ui/badge";
 import { CodeBlock } from "@/components/ui/code-block";
-import { ShareButton } from "@/components/ui/share-button";
+import { ShareButton } from "@/components/share-button";
 import {
 	AnalysisCardRoot,
 	AnalysisCardHeader,

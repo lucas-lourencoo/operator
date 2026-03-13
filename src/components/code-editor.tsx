@@ -140,11 +140,11 @@ export function CodeEditor({
       {maxLength && (
         <div className="absolute bottom-4 right-4 z-20 font-mono text-[10px] tracking-tight bg-bg-page/50 backdrop-blur px-2 py-1 rounded border border-border-primary pointer-events-none">
           <span className={cn(isOverLimit ? "text-accent-red" : "text-text-tertiary")}>
-            {currentLength.toLocaleString()}
+            {currentLength.toLocaleString("en-US")}
           </span>
           <span className="text-text-tertiary opacity-50 mx-1">/</span>
           <span className="text-text-tertiary font-bold">
-            {maxLength.toLocaleString()}
+            {maxLength.toLocaleString("en-US")}
           </span>
         </div>
       )}

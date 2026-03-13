@@ -1,18 +1,11 @@
-"use client";
-
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table-row";
-import { Toggle } from "@/components/ui/toggle";
-import { CodeEditor } from "@/components/ui/code-editor";
+import { HomeForm } from "./home-form";
+import { RoastStats } from "@/components/roast-stats";
 
 export default function Home() {
-	const [code, setCode] = React.useState("");
-
-	const MAX_LENGTH = 2000;
-	const isButtonEnabled = code.trim().length > 0 && code.length <= MAX_LENGTH;
-
 	return (
 		<main className="flex flex-col items-center w-full min-h-screen pt-20 pb-16 px-10 gap-8">
 			{/* Main Content Container - max-w-5xl keeps the content centered and constrained */}
@@ -33,45 +26,12 @@ export default function Home() {
 				</section>
 
 				{/* Code Input Box Section */}
-				<section className="flex flex-col w-full max-w-[780px] mt-8">
-					<CodeEditor 
-						value={code} 
-						onChange={setCode}
-						placeholder="function calculateTotal(items) { ... }"
-						maxLength={MAX_LENGTH}
-					/>
-
-					{/* Actions Bar */}
-					<div className="flex items-center justify-between mt-4">
-						<div className="flex items-center gap-4">
-							<div className="flex items-center gap-2">
-								<Toggle defaultChecked />
-								<span className="font-mono text-sm text-accent-green">
-									roast mode
-								</span>
-							</div>
-							<span className="hidden font-mono text-xs text-text-tertiary sm:inline-block">
-								{code.length > MAX_LENGTH 
-									? "// code too long, even I have limits"
-									: "// maximum sarcasm enabled"}
-							</span>
-						</div>
-						<Button
-							variant="primary"
-							className="font-bold"
-							disabled={!isButtonEnabled}
-						>
-							$ roast_my_code
-						</Button>
-					</div>
+				<div className="flex flex-col w-full max-w-[780px]">
+					<HomeForm />
 
 					{/* Footer Stats */}
-					<div className="flex items-center justify-center gap-4 mt-8 font-mono text-xs text-text-tertiary">
-						<span>2,847 codes roasted</span>
-						<span>·</span>
-						<span>avg score: 4.2/10</span>
-					</div>
-				</section>
+					<RoastStats />
+				</div>
 
 				{/* Leaderboard Preview Section */}
 				<section className="flex flex-col w-full max-w-[960px] gap-6 mt-16">
@@ -175,7 +135,7 @@ export default function Home() {
 					{/* Leaderboard Footer Hint */}
 					<div className="flex justify-center py-4">
 						<Link href="/leaderboard" className="font-mono text-xs text-text-tertiary hover:text-text-secondary transition-colors cursor-pointer">
-							{"showing top 3 of 2,847 · view full leaderboard >>"}
+							{"showing top 3 · view full leaderboard >>"}
 						</Link>
 					</div>
 				</section>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
+import { TRPCReactProvider } from "@/trpc/client";
 
 const jetbrainsMono = JetBrains_Mono({
 	variable: "--font-jetbrains-mono",
@@ -23,8 +24,10 @@ export default function RootLayout({
 			<body
 				className={`${jetbrainsMono.variable} font-sans antialiased bg-bg-card text-text-primary min-h-screen flex flex-col`}
 			>
-				<Header />
-				{children}
+				<TRPCReactProvider>
+					<Header />
+					{children}
+				</TRPCReactProvider>
 			</body>
 		</html>
 	);
