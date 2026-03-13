@@ -1,65 +1,199 @@
-import Image from "next/image";
+"use client";
+
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { TableCell, TableRow } from "@/components/ui/table-row";
+import { Toggle } from "@/components/ui/toggle";
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+	const [code, setCode] = React.useState("");
+
+	const isButtonEnabled = code.trim().length > 0;
+
+	return (
+		<main className="flex flex-col items-center w-full min-h-screen pt-20 pb-16 px-10 gap-8">
+			{/* Main Content Container - max-w-5xl keeps the content centered and constrained */}
+			<div className="flex flex-col items-center w-full max-w-5xl gap-8">
+				{/* Hero Title Section */}
+				<section className="flex flex-col items-center gap-3 text-center">
+					<div className="flex items-center justify-center gap-3">
+						<span className="font-mono text-4xl font-bold text-accent-green">
+							$
+						</span>
+						<h1 className="font-mono text-4xl font-bold text-text-primary">
+							paste your code. get roasted.
+						</h1>
+					</div>
+					<p className="font-mono text-sm text-text-secondary">
+						{"// drop your code below and we'll rate it — brutally honest or full roast mode"}
+					</p>
+				</section>
+
+				{/* Code Input Box Section */}
+				<section className="flex flex-col w-full max-w-[780px] mt-8">
+					<div className="flex flex-col rounded-lg border border-border-primary bg-bg-card overflow-hidden">
+						{/* Window Header */}
+						<div className="flex h-10 items-center px-4 border-b border-border-primary gap-2 bg-bg-hover">
+							<div className="h-3 w-3 rounded-full bg-accent-red" />
+							<div className="h-3 w-3 rounded-full bg-accent-amber" />
+							<div className="h-3 w-3 rounded-full bg-accent-green" />
+						</div>
+
+						{/* Code Inner Area */}
+						<div className="flex min-h-[320px]">
+							{/* Line Numbers */}
+							<div className="flex flex-col gap-2 p-4 border-r border-border-primary text-right font-mono text-xs text-text-tertiary select-none">
+								{Array.from({ length: 16 }, (_, i) => i + 1).map((num) => (
+									<span key={num}>{num}</span>
+								))}
+							</div>
+							{/* Editor Area */}
+							<div className="flex-1 p-4">
+								<textarea
+									className="h-full w-full resize-none bg-transparent font-mono text-xs text-text-primary outline-none placeholder:text-text-tertiary focus:ring-0"
+									placeholder="function calculateTotal(items) { ... }"
+									value={code}
+									onChange={(e) => setCode(e.target.value)}
+								/>
+							</div>
+						</div>
+					</div>
+
+					{/* Actions Bar */}
+					<div className="flex items-center justify-between mt-4">
+						<div className="flex items-center gap-4">
+							<div className="flex items-center gap-2">
+								<Toggle defaultChecked />
+								<span className="font-mono text-sm text-accent-green">
+									roast mode
+								</span>
+							</div>
+							<span className="hidden font-mono text-xs text-text-tertiary sm:inline-block">
+								{"// maximum sarcasm enabled"}
+							</span>
+						</div>
+						<Button
+							variant="primary"
+							className="font-bold"
+							disabled={!isButtonEnabled}
+						>
+							$ roast_my_code
+						</Button>
+					</div>
+
+					{/* Footer Stats */}
+					<div className="flex items-center justify-center gap-4 mt-8 font-mono text-xs text-text-tertiary">
+						<span>2,847 codes roasted</span>
+						<span>·</span>
+						<span>avg score: 4.2/10</span>
+					</div>
+				</section>
+
+				{/* Leaderboard Preview Section */}
+				<section className="flex flex-col w-full max-w-[960px] gap-6 mt-16">
+					<div className="flex items-center justify-between">
+						<div className="flex items-center gap-2">
+							<span className="font-mono text-sm font-bold text-accent-green">
+								{"//"}
+							</span>
+							<h2 className="font-mono text-sm font-bold text-text-primary">
+								shame_leaderboard
+							</h2>
+						</div>
+						<Button
+							variant="outline"
+							size="sm"
+							className="text-xs text-text-secondary"
+						>
+							$ view_all &gt;&gt;
+						</Button>
+					</div>
+					<p className="-mt-4 font-mono text-xs text-text-tertiary">
+						{"// the worst code on the internet, ranked by shame"}
+					</p>
+
+					{/* Table Preview */}
+					<div className="flex flex-col overflow-hidden rounded-lg border border-border-primary bg-bg-card">
+						{/* Table Header */}
+						<div className="flex h-10 items-center border-b border-border-primary bg-bg-hover px-5">
+							<span className="w-[50px] font-mono text-xs font-medium text-text-tertiary">
+								#
+							</span>
+							<span className="w-[70px] font-mono text-xs font-medium text-text-tertiary">
+								score
+							</span>
+							<span className="flex-1 font-mono text-xs font-medium text-text-tertiary">
+								code
+							</span>
+							<span className="w-[100px] text-right font-mono text-xs font-medium text-text-tertiary">
+								lang
+							</span>
+						</div>
+
+						{/* Mocked Rows */}
+						<TableRow>
+							<TableCell className="w-[50px] font-medium text-accent-amber">
+								1
+							</TableCell>
+							<TableCell className="w-[70px] font-bold text-accent-red">
+								1.2
+							</TableCell>
+							<TableCell className="flex-1 flex-col items-start justify-center gap-1 py-2 font-medium text-text-primary">
+								<span>eval(prompt("enter code"))</span>
+								<span>document.write(response)</span>
+								<span className="text-text-tertiary font-normal">
+									{"// trust the user lol"}
+								</span>
+							</TableCell>
+							<TableCell className="w-[100px] justify-end text-text-secondary italic">
+								javascript
+							</TableCell>
+						</TableRow>
+
+						<TableRow>
+							<TableCell className="w-[50px] font-medium text-text-secondary">
+								2
+							</TableCell>
+							<TableCell className="w-[70px] font-bold text-accent-red">
+								1.8
+							</TableCell>
+							<TableCell className="flex-1 flex-col items-start justify-center gap-1 py-2 font-medium text-text-primary">
+								<span>if (x == true) &#123; return true; &#125;</span>
+								<span>else if (x == false) &#123; return false; &#125;</span>
+								<span>else &#123; return !false; &#125;</span>
+							</TableCell>
+							<TableCell className="w-[100px] justify-end text-text-secondary italic">
+								typescript
+							</TableCell>
+						</TableRow>
+
+						<TableRow>
+							<TableCell className="w-[50px] font-medium text-text-secondary">
+								3
+							</TableCell>
+							<TableCell className="w-[70px] font-bold text-accent-red">
+								2.1
+							</TableCell>
+							<TableCell className="flex-1 flex-col items-start justify-center gap-1 py-2 font-medium text-text-primary">
+								<span>SELECT * FROM users WHERE 1=1</span>
+								<span className="text-text-tertiary font-normal">
+									{"-- TODO: add authentication"}
+								</span>
+							</TableCell>
+							<TableCell className="w-[100px] justify-end text-text-secondary italic">
+								sql
+							</TableCell>
+						</TableRow>
+					</div>
+
+					{/* Leaderboard Footer Hint */}
+					<div className="flex justify-center py-4">
+						<p className="font-mono text-xs text-text-tertiary">
+							{"showing top 3 of 2,847 · view full leaderboard >>"}
+						</p>
+					</div>
+				</section>
+			</div>
+		</main>
+	);
 }
