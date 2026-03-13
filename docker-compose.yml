@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: devroast-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: devroast
+    ports:
+      - "5432:5432"
+    volumes:
+      - devroast-pgdata:/var/lib/postgresql/data
+
+volumes:
+  devroast-pgdata:

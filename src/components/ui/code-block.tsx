@@ -13,11 +13,13 @@ export interface CodeBlockProps
 		VariantProps<typeof codeBlockVariants> {
 	code: string;
 	lang?: BundledLanguage | string;
+	showLineNumbers?: boolean;
 }
 
 async function CodeBlock({
 	code,
 	lang = "typescript",
+	showLineNumbers = false,
 	className,
 	...props
 }: CodeBlockProps) {
@@ -26,13 +28,26 @@ async function CodeBlock({
 		theme: "vesper",
 	});
 
+	const lines = code.split("\n");
+
 	return (
 		<div className={cn(codeBlockVariants({ className }))} {...props}>
-			<div
-				// biome-ignore lint/security/noDangerouslySetInnerHtml: required for shiki syntax highlighter
-				dangerouslySetInnerHTML={{ __html: html }}
-				className="overflow-x-auto p-4 [&>pre]:!bg-transparent [&>pre]:m-0"
-			/>
+			<div className="flex">
+				{showLineNumbers && (
+					<div className="flex flex-col border-r border-border-primary bg-bg-card/50 px-3 py-4 text-right font-mono text-xs text-text-tertiary select-none min-w-[40px]">
+						{lines.map((_, i) => (
+							<span key={i} className="leading-5 h-5">
+								{i + 1}
+							</span>
+						))}
+					</div>
+				)}
+				<div
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: required for shiki syntax highlighter
+					dangerouslySetInnerHTML={{ __html: html }}
+					className="flex-1 overflow-x-auto p-4 [&>pre]:!bg-transparent [&>pre]:m-0 text-xs leading-5"
+				/>
+			</div>
 		</div>
 	);
 }

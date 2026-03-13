@@ -1,14 +1,17 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table-row";
 import { Toggle } from "@/components/ui/toggle";
+import { CodeEditor } from "@/components/ui/code-editor";
 
 export default function Home() {
 	const [code, setCode] = React.useState("");
 
-	const isButtonEnabled = code.trim().length > 0;
+	const MAX_LENGTH = 2000;
+	const isButtonEnabled = code.trim().length > 0 && code.length <= MAX_LENGTH;
 
 	return (
 		<main className="flex flex-col items-center w-full min-h-screen pt-20 pb-16 px-10 gap-8">
@@ -31,33 +34,12 @@ export default function Home() {
 
 				{/* Code Input Box Section */}
 				<section className="flex flex-col w-full max-w-[780px] mt-8">
-					<div className="flex flex-col rounded-lg border border-border-primary bg-bg-card overflow-hidden">
-						{/* Window Header */}
-						<div className="flex h-10 items-center px-4 border-b border-border-primary gap-2 bg-bg-hover">
-							<div className="h-3 w-3 rounded-full bg-accent-red" />
-							<div className="h-3 w-3 rounded-full bg-accent-amber" />
-							<div className="h-3 w-3 rounded-full bg-accent-green" />
-						</div>
-
-						{/* Code Inner Area */}
-						<div className="flex min-h-[320px]">
-							{/* Line Numbers */}
-							<div className="flex flex-col gap-2 p-4 border-r border-border-primary text-right font-mono text-xs text-text-tertiary select-none">
-								{Array.from({ length: 16 }, (_, i) => i + 1).map((num) => (
-									<span key={num}>{num}</span>
-								))}
-							</div>
-							{/* Editor Area */}
-							<div className="flex-1 p-4">
-								<textarea
-									className="h-full w-full resize-none bg-transparent font-mono text-xs text-text-primary outline-none placeholder:text-text-tertiary focus:ring-0"
-									placeholder="function calculateTotal(items) { ... }"
-									value={code}
-									onChange={(e) => setCode(e.target.value)}
-								/>
-							</div>
-						</div>
-					</div>
+					<CodeEditor 
+						value={code} 
+						onChange={setCode}
+						placeholder="function calculateTotal(items) { ... }"
+						maxLength={MAX_LENGTH}
+					/>
 
 					{/* Actions Bar */}
 					<div className="flex items-center justify-between mt-4">
@@ -69,7 +51,9 @@ export default function Home() {
 								</span>
 							</div>
 							<span className="hidden font-mono text-xs text-text-tertiary sm:inline-block">
-								{"// maximum sarcasm enabled"}
+								{code.length > MAX_LENGTH 
+									? "// code too long, even I have limits"
+									: "// maximum sarcasm enabled"}
 							</span>
 						</div>
 						<Button
@@ -100,13 +84,15 @@ export default function Home() {
 								shame_leaderboard
 							</h2>
 						</div>
-						<Button
-							variant="outline"
-							size="sm"
-							className="text-xs text-text-secondary"
-						>
-							$ view_all &gt;&gt;
-						</Button>
+						<Link href="/leaderboard">
+							<Button
+								variant="outline"
+								size="sm"
+								className="text-xs text-text-secondary"
+							>
+								$ view_all &gt;&gt;
+							</Button>
+						</Link>
 					</div>
 					<p className="-mt-4 font-mono text-xs text-text-tertiary">
 						{"// the worst code on the internet, ranked by shame"}
@@ -188,9 +174,9 @@ export default function Home() {
 
 					{/* Leaderboard Footer Hint */}
 					<div className="flex justify-center py-4">
-						<p className="font-mono text-xs text-text-tertiary">
+						<Link href="/leaderboard" className="font-mono text-xs text-text-tertiary hover:text-text-secondary transition-colors cursor-pointer">
 							{"showing top 3 of 2,847 · view full leaderboard >>"}
-						</p>
+						</Link>
 					</div>
 				</section>
 			</div>
