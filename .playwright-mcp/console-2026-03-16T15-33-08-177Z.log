@@ -142,3 +142,83 @@ It can also happen if the client has a browser extension installed which messes 
               ...
       ...
  @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  768440ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  771551ms] [ERROR] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+      <SegmentViewNode type="page" pagePath="page.tsx">
+        <SegmentTrieNode>
+        <Home>
+          <main className="flex flex-...">
+            <div className="flex flex-...">
+              <section>
+              <div className="flex flex-...">
+                <HomeForm>
+                  <section className="flex flex-...">
+                    <CodeEditor>
+                    <div className="flex items...">
+                      <div className="flex items...">
+                        <div className="flex items...">
+                          <_c defaultChecked={true}>
+                            <SwitchRoot className="peer inlin..." ref={null} defaultChecked={true}>
+                              <span
+                                data-checked=""
+                                type={undefined}
+                                onClick={function onClick}
+                                onMouseDown={function onMouseDown}
+                                onKeyDown={function}
+                                onKeyUp={function onKeyUp}
+                                onPointerDown={function onPointerDown}
+                                role="switch"
+                                tabIndex={0}
++                               id="base-ui-_R_aqinelb_"
+-                               id="base-ui-_R_1b6inelb_"
+                                aria-checked={true}
+                                aria-readonly={undefined}
+                                aria-required={undefined}
+                                aria-labelledby={undefined}
+                                onFocus={function onFocus}
+                                onBlur={function onBlur}
+                                ref={function}
+                                className="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full..."
+                              >
+                              <input
+                                checked={true}
+                                disabled={false}
++                               id="base-ui-_R_aqinelbH1_"
+-                               id="base-ui-_R_1b6inelbH1_"
+                                name={undefined}
+                                required={false}
+                                style={{clipPath:"inset(50%)",overflow:"hidden",whiteSpace:"nowrap",border:0,padding:0,width:1,height:1,margin:-1, ...}}
+                                tabIndex={-1}
+                                type="checkbox"
+                                aria-hidden={true}
+                                ref={function}
+                                onChange={function onChange}
+                                onFocus={function onFocus}
+                              >
+                          ...
+                        ...
+                      ...
+                ...
+              ...
+      ...
+ @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127

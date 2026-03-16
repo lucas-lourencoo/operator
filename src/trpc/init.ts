@@ -1,16 +1,16 @@
-import { initTRPC } from '@trpc/server';
-import superjson from 'superjson';
-import { db } from '@/lib/db';
+import { initTRPC } from "@trpc/server";
+import superjson from "superjson";
+import { db } from "@/lib/db";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  return {
-    db,
-    ...opts,
-  };
+	return {
+		db,
+		...opts,
+	};
 };
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
+	transformer: superjson,
 });
 
 export const createTRPCRouter = t.router;

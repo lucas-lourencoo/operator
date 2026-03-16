@@ -3,8 +3,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 import { cn } from "@/lib/utils";
 
 const cardVariants = tv({
-	base:
-		"flex flex-col gap-3 rounded-lg border border-border-primary bg-bg-card p-5 shadow-sm",
+	base: "flex flex-col gap-3 rounded-lg border border-border-primary bg-bg-card p-5 shadow-sm",
 });
 
 export interface CardRootProps

@@ -27,17 +27,18 @@ export interface AnalysisCardRootProps
 	extends React.ComponentPropsWithoutRef<typeof Card>,
 		VariantProps<typeof analysisCardVariants> {}
 
-const AnalysisCardRoot = React.forwardRef<HTMLDivElement, AnalysisCardRootProps>(
-	({ className, variant, ...props }, ref) => {
-		return (
-			<Card
-				ref={ref}
-				className={cn(analysisCardVariants({ variant, className }))}
-				{...props}
-			/>
-		);
-	},
-);
+const AnalysisCardRoot = React.forwardRef<
+	HTMLDivElement,
+	AnalysisCardRootProps
+>(({ className, variant, ...props }, ref) => {
+	return (
+		<Card
+			ref={ref}
+			className={cn(analysisCardVariants({ variant, className }))}
+			{...props}
+		/>
+	);
+});
 
 AnalysisCardRoot.displayName = "AnalysisCardRoot";
 

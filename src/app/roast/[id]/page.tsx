@@ -1,14 +1,14 @@
-import { ScoreRing } from "@/components/ui/score-ring";
-import { BadgeRoot, BadgeDot } from "@/components/ui/badge";
-import { CodeBlock } from "@/components/ui/code-block";
 import { ShareButton } from "@/components/share-button";
 import {
-	AnalysisCardRoot,
-	AnalysisCardHeader,
-	AnalysisCardTitle,
-	AnalysisCardDescription,
 	AnalysisCardContent,
+	AnalysisCardDescription,
+	AnalysisCardHeader,
+	AnalysisCardRoot,
+	AnalysisCardTitle,
 } from "@/components/ui/analysis-card";
+import { BadgeDot, BadgeRoot } from "@/components/ui/badge";
+import { CodeBlock } from "@/components/ui/code-block";
+import { ScoreRing } from "@/components/ui/score-ring";
 import { cn } from "@/lib/utils";
 
 interface RoastPageProps {
@@ -16,6 +16,7 @@ interface RoastPageProps {
 }
 
 export default async function RoastResultPage({ params }: RoastPageProps) {
+	"use cache";
 	const { id } = await params;
 
 	// Mock data based on the Pencil design
@@ -23,7 +24,8 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 		id,
 		score: 3.5,
 		verdict: "needs_serious_help",
-		quote: "\"this code looks like it was written during a power outage... in 2005.\"",
+		quote:
+			'"this code looks like it was written during a power outage... in 2005."',
 		language: "javascript",
 		lines: 7,
 		submittedCode: `function calculateTotal(items) {
@@ -42,25 +44,29 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 				id: "1",
 				variant: "critical" as const,
 				title: "using var instead of const/let",
-				description: "var is function-scoped and leads to hoisting bugs. use const by default, let when reassignment is needed.",
+				description:
+					"var is function-scoped and leads to hoisting bugs. use const by default, let when reassignment is needed.",
 			},
 			{
 				id: "2",
 				variant: "critical" as const,
 				title: "imperative loop pattern",
-				description: "for loops are verbose and error-prone. use .reduce() or .map() for cleaner, functional transformations.",
+				description:
+					"for loops are verbose and error-prone. use .reduce() or .map() for cleaner, functional transformations.",
 			},
 			{
 				id: "3",
 				variant: "good" as const,
 				title: "clear naming conventions",
-				description: "calculateTotal and items are descriptive, self-documenting names that communicate intent without comments.",
+				description:
+					"calculateTotal and items are descriptive, self-documenting names that communicate intent without comments.",
 			},
 			{
 				id: "4",
 				variant: "good" as const,
 				title: "single responsibility",
-				description: "the function does one thing well — calculates a total. no side effects, no mixed concerns, no hidden complexity.",
+				description:
+					"the function does one thing well — calculates a total. no side effects, no mixed concerns, no hidden complexity.",
 			},
 		],
 		suggestedFix: {
@@ -68,11 +74,17 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 			diff: [
 				{ type: "context", content: "function calculateTotal(items) {" },
 				{ type: "removed", content: "  var total = 0;" },
-				{ type: "removed", content: "  for (var i = 0; i < items.length; i++) {" },
+				{
+					type: "removed",
+					content: "  for (var i = 0; i < items.length; i++) {",
+				},
 				{ type: "removed", content: "    total = total + items[i].price;" },
 				{ type: "removed", content: "  }" },
 				{ type: "removed", content: "  return total;" },
-				{ type: "added", content: "  return items.reduce((sum, item) => sum + item.price, 0);" },
+				{
+					type: "added",
+					content: "  return items.reduce((sum, item) => sum + item.price, 0);",
+				},
 				{ type: "context", content: "}" },
 			],
 		},
@@ -109,7 +121,9 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 			{/* Submitted Code Section */}
 			<section className="flex flex-col gap-6">
 				<div className="flex items-center gap-2">
-					<span className="font-mono text-sm font-bold text-accent-green">//</span>
+					<span className="font-mono text-sm font-bold text-accent-green">
+						//
+					</span>
 					<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
 						your_submission
 					</h2>
@@ -127,7 +141,9 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 			{/* Detailed Analysis Section */}
 			<section className="flex flex-col gap-6">
 				<div className="flex items-center gap-2">
-					<span className="font-mono text-sm font-bold text-accent-green">//</span>
+					<span className="font-mono text-sm font-bold text-accent-green">
+						//
+					</span>
 					<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
 						detailed_analysis
 					</h2>
@@ -157,7 +173,9 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 			{/* Suggested Fix Section */}
 			<section className="flex flex-col gap-6">
 				<div className="flex items-center gap-2">
-					<span className="font-mono text-sm font-bold text-accent-green">//</span>
+					<span className="font-mono text-sm font-bold text-accent-green">
+						//
+					</span>
 					<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
 						suggested_fix
 					</h2>
@@ -174,13 +192,18 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 								key={i}
 								className={cn(
 									"flex items-center h-8 px-4 font-mono text-xs leading-none",
-									line.type === "added" && "bg-accent-green/10 text-accent-green",
+									line.type === "added" &&
+										"bg-accent-green/10 text-accent-green",
 									line.type === "removed" && "bg-accent-red/10 text-accent-red",
-									line.type === "context" && "text-text-secondary"
+									line.type === "context" && "text-text-secondary",
 								)}
 							>
 								<span className="w-6 flex-shrink-0 opacity-50">
-									{line.type === "added" ? "+" : line.type === "removed" ? "-" : " "}
+									{line.type === "added"
+										? "+"
+										: line.type === "removed"
+											? "-"
+											: " "}
 								</span>
 								<pre className="m-0 whitespace-pre font-mono">
 									{line.content}

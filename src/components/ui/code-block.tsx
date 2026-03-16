@@ -23,6 +23,8 @@ async function CodeBlock({
 	className,
 	...props
 }: CodeBlockProps) {
+	"use cache";
+	
 	const html = await codeToHtml(code, {
 		lang: lang as string,
 		theme: "github-dark",

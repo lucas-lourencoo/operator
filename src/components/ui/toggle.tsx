@@ -14,8 +14,10 @@ const toggleThumbVariants = tv({
 });
 
 export interface ToggleProps
-	extends React.ComponentPropsWithoutRef<typeof Switch.Root>,
-		VariantProps<typeof toggleRootVariants> {}
+	extends Omit<React.ComponentPropsWithoutRef<typeof Switch.Root>, "className">,
+		VariantProps<typeof toggleRootVariants> {
+	className?: string;
+}
 
 const Toggle = React.forwardRef<
 	React.ElementRef<typeof Switch.Root>,

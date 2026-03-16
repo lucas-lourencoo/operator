@@ -1,12 +1,12 @@
 import { Plus, Send, Terminal, Trash2 } from "lucide-react";
 import {
 	AnalysisCardContent,
+	AnalysisCardDescription,
 	AnalysisCardHeader,
 	AnalysisCardRoot,
 	AnalysisCardTitle,
-	AnalysisCardDescription,
 } from "@/components/ui/analysis-card";
-import { BadgeRoot, BadgeDot } from "@/components/ui/badge";
+import { BadgeDot, BadgeRoot } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/ui/code-block";
 import { Input, Textarea } from "@/components/ui/input";
@@ -79,9 +79,12 @@ export default function UIComponentsPage() {
 							</BadgeRoot>
 						</AnalysisCardHeader>
 						<AnalysisCardContent>
-							<AnalysisCardTitle>Using var instead of const/let</AnalysisCardTitle>
+							<AnalysisCardTitle>
+								Using var instead of const/let
+							</AnalysisCardTitle>
 							<AnalysisCardDescription>
-								The var keyword is function-scoped rather than block-scoped, which can lead to unexpected behavior and bugs.
+								The var keyword is function-scoped rather than block-scoped,
+								which can lead to unexpected behavior and bugs.
 							</AnalysisCardDescription>
 						</AnalysisCardContent>
 					</AnalysisCardRoot>
@@ -95,7 +98,8 @@ export default function UIComponentsPage() {
 						<AnalysisCardContent>
 							<AnalysisCardTitle>Unused variables found</AnalysisCardTitle>
 							<AnalysisCardDescription>
-								Variables declared but never used increase cognitive load and can indicate incomplete logic.
+								Variables declared but never used increase cognitive load and
+								can indicate incomplete logic.
 							</AnalysisCardDescription>
 						</AnalysisCardContent>
 					</AnalysisCardRoot>
@@ -109,7 +113,8 @@ export default function UIComponentsPage() {
 						<AnalysisCardContent>
 							<AnalysisCardTitle>Clean architecture</AnalysisCardTitle>
 							<AnalysisCardDescription>
-								The component structure follows best practices and maintains a clear separation of concerns.
+								The component structure follows best practices and maintains a
+								clear separation of concerns.
 							</AnalysisCardDescription>
 						</AnalysisCardContent>
 					</AnalysisCardRoot>

@@ -1,12 +1,18 @@
-import * as React from "react";
 import Link from "next/link";
+import { Suspense } from "react";
+import { cacheLife } from "next/cache";
+import { RoastStats } from "@/components/roast-stats";
+import {
+	ShameLeaderboard,
+	ShameLeaderboardSkeleton,
+} from "@/components/shame-leaderboard";
 import { Button } from "@/components/ui/button";
 import { HomeForm } from "./home-form";
-import { RoastStats } from "@/components/roast-stats";
-import { ShameLeaderboard, ShameLeaderboardSkeleton } from "@/components/shame-leaderboard";
-import { Suspense } from "react";
 
-export default function Home() {
+export default async function Home() {
+	"use cache";
+	cacheLife("leaderboard");
+
 	return (
 		<main className="flex flex-col items-center w-full min-h-screen pt-20 pb-16 px-10 gap-8">
 			{/* Main Content Container - max-w-5xl keeps the content centered and constrained */}
@@ -22,7 +28,9 @@ export default function Home() {
 						</h1>
 					</div>
 					<p className="font-mono text-sm text-text-secondary">
-						{"// drop your code below and we'll rate it — brutally honest or full roast mode"}
+						{
+							"// drop your code below and we'll rate it — brutally honest or full roast mode"
+						}
 					</p>
 				</section>
 

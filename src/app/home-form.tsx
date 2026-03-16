@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { CodeEditor } from "@/components/code-editor";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
-import { CodeEditor } from "@/components/code-editor";
 
 export function HomeForm() {
 	const [code, setCode] = React.useState("");
@@ -13,8 +13,8 @@ export function HomeForm() {
 
 	return (
 		<section className="flex flex-col w-full max-w-[780px] mt-8">
-			<CodeEditor 
-				value={code} 
+			<CodeEditor
+				value={code}
 				onChange={setCode}
 				placeholder="function calculateTotal(items) { ... }"
 				maxLength={MAX_LENGTH}
@@ -30,7 +30,7 @@ export function HomeForm() {
 						</span>
 					</div>
 					<span className="hidden font-mono text-xs text-text-tertiary sm:inline-block">
-						{code.length > MAX_LENGTH 
+						{code.length > MAX_LENGTH
 							? "// code too long, even I have limits"
 							: "// maximum sarcasm enabled"}
 					</span>

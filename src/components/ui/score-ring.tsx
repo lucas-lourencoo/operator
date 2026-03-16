@@ -17,7 +17,7 @@ const ScoreRing = React.forwardRef<HTMLDivElement, ScoreRingProps>(
 	({ className, score, max = 10, ...props }, ref) => {
 		const baseId = React.useId().replace(/:/g, "");
 		const maskId = `ring-mask-${baseId}`;
-		
+
 		const percentage = (score / max) * 100;
 		const radius = 86;
 		const circumference = 2 * Math.PI * radius;
@@ -29,10 +29,7 @@ const ScoreRing = React.forwardRef<HTMLDivElement, ScoreRingProps>(
 				className={cn(scoreRingVariants({ className }))}
 				{...props}
 			>
-				<svg 
-					viewBox="0 0 180 180"
-					className="absolute inset-0 h-full w-full"
-				>
+				<svg viewBox="0 0 180 180" className="absolute inset-0 h-full w-full">
 					<defs>
 						<mask id={maskId}>
 							<rect width="100%" height="100%" fill="black" />
@@ -50,7 +47,7 @@ const ScoreRing = React.forwardRef<HTMLDivElement, ScoreRingProps>(
 							/>
 						</mask>
 					</defs>
-					
+
 					{/* Background Circle */}
 					<circle
 						cx="90"
@@ -60,23 +57,28 @@ const ScoreRing = React.forwardRef<HTMLDivElement, ScoreRingProps>(
 						fill="transparent"
 						className="stroke-border-primary origin-center -rotate-90"
 					/>
-					
+
 					{/* Gradient Circle */}
 					<foreignObject width="180" height="180" mask={`url(#${maskId})`}>
-						<div 
+						<div
 							className="h-full w-full"
 							style={{
-								background: "conic-gradient(var(--color-accent-red) 0%, var(--color-accent-amber) 35%, var(--color-accent-green) 35%)"
+								background:
+									"conic-gradient(var(--color-accent-red) 0%, var(--color-accent-amber) 35%, var(--color-accent-green) 35%)",
 							}}
 						/>
 					</foreignObject>
 				</svg>
 				<div className="absolute flex flex-col items-center justify-center gap-1 text-center">
 					<div className="flex items-baseline gap-1">
-						<span 
+						<span
 							className={cn(
 								"font-mono text-5xl font-bold",
-								score < 3.5 ? "text-accent-red" : score < 7 ? "text-accent-amber" : "text-accent-green"
+								score < 3.5
+									? "text-accent-red"
+									: score < 7
+										? "text-accent-amber"
+										: "text-accent-green",
 							)}
 						>
 							{score.toFixed(1)}
@@ -94,4 +96,3 @@ const ScoreRing = React.forwardRef<HTMLDivElement, ScoreRingProps>(
 ScoreRing.displayName = "ScoreRing";
 
 export { ScoreRing, scoreRingVariants };
-

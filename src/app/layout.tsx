@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { TRPCReactProvider } from "@/trpc/client";
@@ -24,10 +25,12 @@ export default function RootLayout({
 			<body
 				className={`${jetbrainsMono.variable} font-sans antialiased bg-bg-card text-text-primary min-h-screen flex flex-col`}
 			>
-				<TRPCReactProvider>
-					<Header />
-					{children}
-				</TRPCReactProvider>
+				<Suspense fallback={null}>
+					<TRPCReactProvider>
+						<Header />
+						{children}
+					</TRPCReactProvider>
+				</Suspense>
 			</body>
 		</html>
 	);
