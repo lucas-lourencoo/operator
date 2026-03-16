@@ -1,27 +1,32 @@
-import { asc, sql, eq } from "drizzle-orm";
-import { roasts, roastFindings, suggestedImprovements } from "@/lib/db/schema";
-import { createTRPCRouter, publicProcedure } from "../init";
-import { z } from "zod";
-import { generateText, Output } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { generateText, Output } from "ai";
+import { asc, eq, sql } from "drizzle-orm";
+import { z } from "zod";
+import { roastFindings, roasts, suggestedImprovements } from "@/lib/db/schema";
+import { SUPPORTED_LANGUAGE_IDS } from "@/lib/shiki";
+import { createTRPCRouter, publicProcedure } from "../init";
 
 const roastSchema = z.object({
 	score: z.number().min(0).max(10),
-	summary: z.string(),
-	findings: z.array(
-		z.object({
-			type: z.enum(["critical", "warning", "good", "neutral"]),
-			title: z.string(),
-			description: z.string(),
-		})
-	),
-	suggestedImprovements: z.array(
-		z.object({
-			originalCode: z.string(),
-			improvedCode: z.string(),
-			explanation: z.string(),
-		})
-	),
+	summary: z.string().max(1000),
+	findings: z
+		.array(
+			z.object({
+				type: z.enum(["critical", "warning", "good", "neutral"]),
+				title: z.string().max(200),
+				description: z.string().max(1000),
+			}),
+		)
+		.max(10),
+	suggestedImprovements: z
+		.array(
+			z.object({
+				originalCode: z.string().max(2000),
+				improvedCode: z.string().max(2000),
+				explanation: z.string().max(1000),
+			}),
+		)
+		.max(5),
 });
 
 export const roastRouter = createTRPCRouter({
@@ -29,11 +34,12 @@ export const roastRouter = createTRPCRouter({
 		.input(
 			z.object({
 				code: z.string().min(1).max(2000),
-				language: z.string(),
+				language: z.enum(SUPPORTED_LANGUAGE_IDS as [string, ...string[]]),
 				isRoastMode: z.boolean(),
-			})
+			}),
 		)
 		.mutation(async ({ ctx, input }) => {
+			// TODO: Add rate limiting and abuse protection (e.g., Upstash Redis) to prevent cost-exhaustion attacks
 			const { code, language, isRoastMode } = input;
 
 			const systemPrompt = isRoastMode
@@ -45,7 +51,7 @@ export const roastRouter = createTRPCRouter({
 					Provide constructive feedback, identify potential bugs or performance issues, and suggest clear improvements.
 					Give the code a fair score (0-10). Keep the tone professional and encouraging.`;
 
-			const prompt = `Review the following ${language} code:\n\n\`\`\`${language}\n${code}\n\`\`\``;
+			const prompt = `Review the following code:\n\n<code language="${language}">\n${code}\n</code>`;
 
 			const { output } = await generateText({
 				model: openai("gpt-4o-mini"),
@@ -56,39 +62,43 @@ export const roastRouter = createTRPCRouter({
 
 			const roastResult = output;
 
-			const [insertedRoast] = await ctx.db
-				.insert(roasts)
-				.values({
-					code,
-					language,
-					score: Math.round(roastResult.score),
-					summary: roastResult.summary,
-				})
-				.returning({ id: roasts.id });
+			const insertedRoastId = await ctx.db.transaction(async (tx) => {
+				const [insertedRoast] = await tx
+					.insert(roasts)
+					.values({
+						code,
+						language,
+						score: Math.round(roastResult.score),
+						summary: roastResult.summary,
+					})
+					.returning({ id: roasts.id });
 
-			if (roastResult.findings.length > 0) {
-				await ctx.db.insert(roastFindings).values(
-					roastResult.findings.map((f) => ({
-						roastId: insertedRoast.id,
-						type: f.type,
-						title: f.title,
-						description: f.description,
-					}))
-				);
-			}
+				if (roastResult.findings.length > 0) {
+					await tx.insert(roastFindings).values(
+						roastResult.findings.map((f) => ({
+							roastId: insertedRoast.id,
+							type: f.type,
+							title: f.title,
+							description: f.description,
+						})),
+					);
+				}
 
-			if (roastResult.suggestedImprovements.length > 0) {
-				await ctx.db.insert(suggestedImprovements).values(
-					roastResult.suggestedImprovements.map((imp) => ({
-						roastId: insertedRoast.id,
-						originalCode: imp.originalCode,
-						improvedCode: imp.improvedCode,
-						explanation: imp.explanation,
-					}))
-				);
-			}
+				if (roastResult.suggestedImprovements.length > 0) {
+					await tx.insert(suggestedImprovements).values(
+						roastResult.suggestedImprovements.map((imp) => ({
+							roastId: insertedRoast.id,
+							originalCode: imp.originalCode,
+							improvedCode: imp.improvedCode,
+							explanation: imp.explanation,
+						})),
+					);
+				}
 
-			return { id: insertedRoast.id };
+				return insertedRoast.id;
+			});
+
+			return { id: insertedRoastId };
 		}),
 
 	getStats: publicProcedure.query(async ({ ctx }) => {
@@ -153,15 +163,16 @@ export const roastRouter = createTRPCRouter({
 
 			if (!roast) return null;
 
-			const findings = await ctx.db
-				.select()
-				.from(roastFindings)
-				.where(eq(roastFindings.roastId, roast.id));
-
-			const improvements = await ctx.db
-				.select()
-				.from(suggestedImprovements)
-				.where(eq(suggestedImprovements.roastId, roast.id));
+			const [findings, improvements] = await Promise.all([
+				ctx.db
+					.select()
+					.from(roastFindings)
+					.where(eq(roastFindings.roastId, roast.id)),
+				ctx.db
+					.select()
+					.from(suggestedImprovements)
+					.where(eq(suggestedImprovements.roastId, roast.id)),
+			]);
 
 			return {
 				...roast,

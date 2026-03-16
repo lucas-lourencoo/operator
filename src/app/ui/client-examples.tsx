@@ -64,7 +64,9 @@ export function UIComponentsClient() {
 						</Tooltip>
 
 						<Tooltip>
-							<TooltipTrigger render={<Button variant="secondary" />}>Hover me</TooltipTrigger>
+							<TooltipTrigger render={<Button variant="secondary" />}>
+								Hover me
+							</TooltipTrigger>
 							<TooltipContent>Using JetBrains Mono font</TooltipContent>
 						</Tooltip>
 					</div>
@@ -78,12 +80,14 @@ export function UIComponentsClient() {
 				</h2>
 				<div className="flex flex-wrap gap-8 p-8 rounded-xl border border-border-primary bg-bg-card">
 					<Dialog>
-						<DialogTrigger render={
-							<Button variant="primary">
-								<MessageSquare className="w-4 h-4" />
-								Open Dialog
-							</Button>
-						} />
+						<DialogTrigger
+							render={
+								<Button variant="primary">
+									<MessageSquare className="w-4 h-4" />
+									Open Dialog
+								</Button>
+							}
+						/>
 						<DialogContent>
 							<DialogHeader>
 								<DialogTitle>Brutally Honest Review</DialogTitle>

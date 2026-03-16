@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { ShareButton } from "@/components/share-button";
 import {
 	AnalysisCardContent,
@@ -9,9 +10,7 @@ import {
 import { BadgeDot, BadgeRoot } from "@/components/ui/badge";
 import { CodeBlock } from "@/components/ui/code-block";
 import { ScoreRing } from "@/components/ui/score-ring";
-import { cn } from "@/lib/utils";
 import { api, getQueryClient } from "@/trpc/server";
-import { notFound } from "next/navigation";
 
 interface RoastPageProps {
 	params: Promise<{ id: string }>;
@@ -23,7 +22,7 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 
 	const queryClient = getQueryClient();
 	const roast = await queryClient.fetchQuery(
-		api.roast.getRoastById.queryOptions({ id })
+		api.roast.getRoastById.queryOptions({ id }),
 	);
 
 	if (!roast) {
@@ -32,7 +31,11 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 
 	const lines = roast.code.split("\n").length;
 	const verdict =
-		roast.score <= 3 ? "needs_serious_help" : roast.score <= 6 ? "could_be_better" : "not_terrible";
+		roast.score <= 3
+			? "needs_serious_help"
+			: roast.score <= 6
+				? "could_be_better"
+				: "not_terrible";
 
 	return (
 		<main className="flex flex-col gap-10 px-10 py-10 lg:px-20 max-w-7xl mx-auto w-full">
@@ -42,8 +45,24 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 					<ScoreRing score={roast.score} className="h-44 w-44" />
 				</div>
 				<div className="flex flex-col gap-4 items-start text-left flex-1">
-					<BadgeRoot variant={roast.score <= 3 ? "critical" : roast.score <= 6 ? "warning" : "good"}>
-						<BadgeDot variant={roast.score <= 3 ? "critical" : roast.score <= 6 ? "warning" : "good"} />
+					<BadgeRoot
+						variant={
+							roast.score <= 3
+								? "critical"
+								: roast.score <= 6
+									? "warning"
+									: "good"
+						}
+					>
+						<BadgeDot
+							variant={
+								roast.score <= 3
+									? "critical"
+									: roast.score <= 6
+										? "warning"
+										: "good"
+							}
+						/>
 						verdict: {verdict}
 					</BadgeRoot>
 					<h1 className="font-mono text-xl lg:text-2xl font-normal leading-relaxed text-text-primary">
@@ -66,7 +85,7 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 			<section className="flex flex-col gap-6">
 				<div className="flex items-center gap-2">
 					<span className="font-mono text-sm font-bold text-accent-green">
-						{/* */}
+						{"//"}
 					</span>
 					<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
 						your_submission
@@ -136,7 +155,12 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 							<div className="rounded-lg border border-border-primary bg-bg-input overflow-hidden flex flex-col">
 								<div className="h-10 border-b border-border-primary px-4 flex items-center bg-bg-card/50">
 									<span className="font-mono text-xs text-text-secondary">
-										improved_code.{roast.language === "javascript" ? "js" : roast.language === "typescript" ? "ts" : "txt"}
+										improved_code.
+										{roast.language === "javascript"
+											? "js"
+											: roast.language === "typescript"
+												? "ts"
+												: "txt"}
 									</span>
 								</div>
 								<CodeBlock

@@ -30,7 +30,6 @@ export function CodeEditor({
 	const { language, setLanguage, isDetecting } = useLanguageDetection(value);
 	const [highlighter, setHighlighter] = useState<Highlighter | null>(null);
 	const [isManualOverride, setIsManualOverride] = useState(false);
-	const _editorRef = useRef<HTMLDivElement>(null);
 
 	const activeLanguage = language;
 	const currentLength = value.length;
