@@ -1,6 +1,13 @@
 # UI Component Patterns & Design System
 
-This directory contains the core UI components for the **devroast** project. All agents and developers MUST follow these patterns to ensure architectural and visual consistency.
+This directory (`src/components/ui/`) contains **ONLY** the core UI components for the **devroast** project. All agents and developers MUST follow these patterns to ensure architectural and visual consistency.
+
+## 🚫 Architecture Boundary Rule: Strict UI Separation
+**CRITICAL:** This folder is STRICTLY for generic, reusable design system components (both primitives and composed elements). 
+- **NO Business Logic:** Do not place components here that handle domain-specific data.
+- **NO API/tRPC Calls:** Data fetching components must live in the root `src/components/` or feature folders.
+- **NO Feature Coupling:** Components tied to a specific feature (like `code-editor.tsx`, `roast-stats.tsx`, `share-button.tsx`) belong outside of `src/components/ui/`.
+- **YES Design System:** Primitives (Button, Input, Card) and composed UI kits (AnalysisCard, ScoreRing, CodeBlock) belong here.
 
 ## 🎨 Visual Identity (Terminal/Hacker Aesthetic)
 - **Primary Accent:** Green (`#10B981`) - used for success, prompts, and main actions.

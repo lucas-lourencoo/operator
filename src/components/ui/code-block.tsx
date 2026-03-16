@@ -25,7 +25,7 @@ async function CodeBlock({
 }: CodeBlockProps) {
 	const html = await codeToHtml(code, {
 		lang: lang as string,
-		theme: "vesper",
+		theme: "github-dark",
 	});
 
 	const lines = code.split("\n");

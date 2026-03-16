@@ -1,9 +1,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { TableCell, TableRow } from "@/components/ui/table-row";
 import { HomeForm } from "./home-form";
 import { RoastStats } from "@/components/roast-stats";
+import { ShameLeaderboard, ShameLeaderboardSkeleton } from "@/components/shame-leaderboard";
+import { Suspense } from "react";
 
 export default function Home() {
 	return (
@@ -58,86 +59,9 @@ export default function Home() {
 						{"// the worst code on the internet, ranked by shame"}
 					</p>
 
-					{/* Table Preview */}
-					<div className="flex flex-col overflow-hidden rounded-lg border border-border-primary bg-bg-card">
-						{/* Table Header */}
-						<div className="flex h-10 items-center border-b border-border-primary bg-bg-hover px-5">
-							<span className="w-[50px] font-mono text-xs font-medium text-text-tertiary">
-								#
-							</span>
-							<span className="w-[70px] font-mono text-xs font-medium text-text-tertiary">
-								score
-							</span>
-							<span className="flex-1 font-mono text-xs font-medium text-text-tertiary">
-								code
-							</span>
-							<span className="w-[100px] text-right font-mono text-xs font-medium text-text-tertiary">
-								lang
-							</span>
-						</div>
-
-						{/* Mocked Rows */}
-						<TableRow>
-							<TableCell className="w-[50px] font-medium text-accent-amber">
-								1
-							</TableCell>
-							<TableCell className="w-[70px] font-bold text-accent-red">
-								1.2
-							</TableCell>
-							<TableCell className="flex-1 flex-col items-start justify-center gap-1 py-2 font-medium text-text-primary">
-								<span>eval(prompt("enter code"))</span>
-								<span>document.write(response)</span>
-								<span className="text-text-tertiary font-normal">
-									{"// trust the user lol"}
-								</span>
-							</TableCell>
-							<TableCell className="w-[100px] justify-end text-text-secondary italic">
-								javascript
-							</TableCell>
-						</TableRow>
-
-						<TableRow>
-							<TableCell className="w-[50px] font-medium text-text-secondary">
-								2
-							</TableCell>
-							<TableCell className="w-[70px] font-bold text-accent-red">
-								1.8
-							</TableCell>
-							<TableCell className="flex-1 flex-col items-start justify-center gap-1 py-2 font-medium text-text-primary">
-								<span>if (x == true) &#123; return true; &#125;</span>
-								<span>else if (x == false) &#123; return false; &#125;</span>
-								<span>else &#123; return !false; &#125;</span>
-							</TableCell>
-							<TableCell className="w-[100px] justify-end text-text-secondary italic">
-								typescript
-							</TableCell>
-						</TableRow>
-
-						<TableRow>
-							<TableCell className="w-[50px] font-medium text-text-secondary">
-								3
-							</TableCell>
-							<TableCell className="w-[70px] font-bold text-accent-red">
-								2.1
-							</TableCell>
-							<TableCell className="flex-1 flex-col items-start justify-center gap-1 py-2 font-medium text-text-primary">
-								<span>SELECT * FROM users WHERE 1=1</span>
-								<span className="text-text-tertiary font-normal">
-									{"-- TODO: add authentication"}
-								</span>
-							</TableCell>
-							<TableCell className="w-[100px] justify-end text-text-secondary italic">
-								sql
-							</TableCell>
-						</TableRow>
-					</div>
-
-					{/* Leaderboard Footer Hint */}
-					<div className="flex justify-center py-4">
-						<Link href="/leaderboard" className="font-mono text-xs text-text-tertiary hover:text-text-secondary transition-colors cursor-pointer">
-							{"showing top 3 · view full leaderboard >>"}
-						</Link>
-					</div>
+					<Suspense fallback={<ShameLeaderboardSkeleton />}>
+						<ShameLeaderboard />
+					</Suspense>
 				</section>
 			</div>
 		</main>
