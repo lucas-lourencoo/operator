@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { cacheLife } from "next/cache";
+import Link from "next/link";
 import { CodeBlock } from "@/components/ui/code-block";
 import { cn } from "@/lib/utils";
 import { api, getQueryClient } from "@/trpc/server";

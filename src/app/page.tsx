@@ -1,6 +1,6 @@
+import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
-import { cacheLife } from "next/cache";
 import { RoastStats } from "@/components/roast-stats";
 import {
 	ShameLeaderboard,

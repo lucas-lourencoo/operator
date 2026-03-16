@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 export interface CodeEditorProps {
 	value: string;
 	onChange: (value: string) => void;
+	onLanguageChange?: (lang: SupportedLanguage) => void;
 	className?: string;
 	placeholder?: string;
 	maxLength?: number;
@@ -21,6 +22,7 @@ export interface CodeEditorProps {
 export function CodeEditor({
 	value,
 	onChange,
+	onLanguageChange,
 	className,
 	placeholder = "function calculateTotal(items) { ... }",
 	maxLength,
@@ -28,7 +30,6 @@ export function CodeEditor({
 	const { language, setLanguage, isDetecting } = useLanguageDetection(value);
 	const [highlighter, setHighlighter] = useState<Highlighter | null>(null);
 	const [isManualOverride, setIsManualOverride] = useState(false);
-	const editorRef = useRef<HTMLDivElement>(null);
 
 	const activeLanguage = language;
 	const currentLength = value.length;
@@ -37,6 +38,12 @@ export function CodeEditor({
 	useEffect(() => {
 		getShikiHighlighter().then(setHighlighter);
 	}, []);
+
+	useEffect(() => {
+		if (onLanguageChange) {
+			onLanguageChange(activeLanguage);
+		}
+	}, [activeLanguage, onLanguageChange]);
 
 	const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		setLanguage(e.target.value as SupportedLanguage);
