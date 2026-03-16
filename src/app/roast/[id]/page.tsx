@@ -10,6 +10,8 @@ import { BadgeDot, BadgeRoot } from "@/components/ui/badge";
 import { CodeBlock } from "@/components/ui/code-block";
 import { ScoreRing } from "@/components/ui/score-ring";
 import { cn } from "@/lib/utils";
+import { api, getQueryClient } from "@/trpc/server";
+import { notFound } from "next/navigation";
 
 interface RoastPageProps {
 	params: Promise<{ id: string }>;
@@ -19,76 +21,18 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 	"use cache";
 	const { id } = await params;
 
-	// Mock data based on the Pencil design
-	const roast = {
-		id,
-		score: 3.5,
-		verdict: "needs_serious_help",
-		quote:
-			'"this code looks like it was written during a power outage... in 2005."',
-		language: "javascript",
-		lines: 7,
-		submittedCode: `function calculateTotal(items) {
-  var total = 0;
-  for (var i = 0; i < items.length; i++) {
-    total = total + items[i].price;
-  }
-  
-  // TODO: handle tax calculation
-  // TODO: handle currency conversion
-  
-  return total;
-}`,
-		analysis: [
-			{
-				id: "1",
-				variant: "critical" as const,
-				title: "using var instead of const/let",
-				description:
-					"var is function-scoped and leads to hoisting bugs. use const by default, let when reassignment is needed.",
-			},
-			{
-				id: "2",
-				variant: "critical" as const,
-				title: "imperative loop pattern",
-				description:
-					"for loops are verbose and error-prone. use .reduce() or .map() for cleaner, functional transformations.",
-			},
-			{
-				id: "3",
-				variant: "good" as const,
-				title: "clear naming conventions",
-				description:
-					"calculateTotal and items are descriptive, self-documenting names that communicate intent without comments.",
-			},
-			{
-				id: "4",
-				variant: "good" as const,
-				title: "single responsibility",
-				description:
-					"the function does one thing well — calculates a total. no side effects, no mixed concerns, no hidden complexity.",
-			},
-		],
-		suggestedFix: {
-			file: "your_code.ts → improved_code.ts",
-			diff: [
-				{ type: "context", content: "function calculateTotal(items) {" },
-				{ type: "removed", content: "  var total = 0;" },
-				{
-					type: "removed",
-					content: "  for (var i = 0; i < items.length; i++) {",
-				},
-				{ type: "removed", content: "    total = total + items[i].price;" },
-				{ type: "removed", content: "  }" },
-				{ type: "removed", content: "  return total;" },
-				{
-					type: "added",
-					content: "  return items.reduce((sum, item) => sum + item.price, 0);",
-				},
-				{ type: "context", content: "}" },
-			],
-		},
-	};
+	const queryClient = getQueryClient();
+	const roast = await queryClient.fetchQuery(
+		api.roast.getRoastById.queryOptions({ id })
+	);
+
+	if (!roast) {
+		notFound();
+	}
+
+	const lines = roast.code.split("\n").length;
+	const verdict =
+		roast.score <= 3 ? "needs_serious_help" : roast.score <= 6 ? "could_be_better" : "not_terrible";
 
 	return (
 		<main className="flex flex-col gap-10 px-10 py-10 lg:px-20 max-w-7xl mx-auto w-full">
@@ -98,17 +42,17 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 					<ScoreRing score={roast.score} className="h-44 w-44" />
 				</div>
 				<div className="flex flex-col gap-4 items-start text-left flex-1">
-					<BadgeRoot variant="critical">
-						<BadgeDot variant="critical" />
-						verdict: {roast.verdict}
+					<BadgeRoot variant={roast.score <= 3 ? "critical" : roast.score <= 6 ? "warning" : "good"}>
+						<BadgeDot variant={roast.score <= 3 ? "critical" : roast.score <= 6 ? "warning" : "good"} />
+						verdict: {verdict}
 					</BadgeRoot>
 					<h1 className="font-mono text-xl lg:text-2xl font-normal leading-relaxed text-text-primary">
-						{roast.quote}
+						"{roast.summary}"
 					</h1>
 					<div className="flex items-center gap-4 font-mono text-xs text-text-tertiary">
 						<span>lang: {roast.language}</span>
 						<span>·</span>
-						<span>{roast.lines} lines</span>
+						<span>{lines} lines</span>
 					</div>
 					<div className="mt-2">
 						<ShareButton />
@@ -122,14 +66,14 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 			<section className="flex flex-col gap-6">
 				<div className="flex items-center gap-2">
 					<span className="font-mono text-sm font-bold text-accent-green">
-						//
+						{/* */}
 					</span>
 					<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
 						your_submission
 					</h2>
 				</div>
 				<CodeBlock
-					code={roast.submittedCode}
+					code={roast.code}
 					lang={roast.language}
 					showLineNumbers
 					className="bg-bg-input"
@@ -139,80 +83,73 @@ export default async function RoastResultPage({ params }: RoastPageProps) {
 			<div className="h-px w-full bg-border-primary" />
 
 			{/* Detailed Analysis Section */}
-			<section className="flex flex-col gap-6">
-				<div className="flex items-center gap-2">
-					<span className="font-mono text-sm font-bold text-accent-green">
-						//
-					</span>
-					<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
-						detailed_analysis
-					</h2>
-				</div>
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-					{roast.analysis.map((item) => (
-						<AnalysisCardRoot key={item.id} variant={item.variant}>
-							<AnalysisCardHeader>
-								<BadgeRoot variant={item.variant}>
-									<BadgeDot variant={item.variant} />
-									{item.variant.toUpperCase()}
-								</BadgeRoot>
-							</AnalysisCardHeader>
-							<AnalysisCardContent>
-								<AnalysisCardTitle>{item.title}</AnalysisCardTitle>
-								<AnalysisCardDescription>
-									{item.description}
-								</AnalysisCardDescription>
-							</AnalysisCardContent>
-						</AnalysisCardRoot>
-					))}
-				</div>
-			</section>
-
-			<div className="h-px w-full bg-border-primary" />
+			{roast.findings.length > 0 && (
+				<>
+					<section className="flex flex-col gap-6">
+						<div className="flex items-center gap-2">
+							<span className="font-mono text-sm font-bold text-accent-green">
+								{/* */}
+							</span>
+							<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
+								detailed_analysis
+							</h2>
+						</div>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+							{roast.findings.map((item) => (
+								<AnalysisCardRoot key={item.id} variant={item.type}>
+									<AnalysisCardHeader>
+										<BadgeRoot variant={item.type}>
+											<BadgeDot variant={item.type} />
+											{item.type.toUpperCase()}
+										</BadgeRoot>
+									</AnalysisCardHeader>
+									<AnalysisCardContent>
+										<AnalysisCardTitle>{item.title}</AnalysisCardTitle>
+										<AnalysisCardDescription>
+											{item.description}
+										</AnalysisCardDescription>
+									</AnalysisCardContent>
+								</AnalysisCardRoot>
+							))}
+						</div>
+					</section>
+					<div className="h-px w-full bg-border-primary" />
+				</>
+			)}
 
 			{/* Suggested Fix Section */}
-			<section className="flex flex-col gap-6">
-				<div className="flex items-center gap-2">
-					<span className="font-mono text-sm font-bold text-accent-green">
-						//
-					</span>
-					<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
-						suggested_fix
-					</h2>
-				</div>
-				<div className="rounded-lg border border-border-primary bg-bg-input overflow-hidden flex flex-col">
-					<div className="h-10 border-b border-border-primary px-4 flex items-center bg-bg-card/50">
-						<span className="font-mono text-xs text-text-secondary">
-							{roast.suggestedFix.file}
+			{roast.improvements.length > 0 && (
+				<section className="flex flex-col gap-6">
+					<div className="flex items-center gap-2">
+						<span className="font-mono text-sm font-bold text-accent-green">
+							{/* */}
 						</span>
+						<h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
+							suggested_fix
+						</h2>
 					</div>
-					<div className="flex flex-col py-2">
-						{roast.suggestedFix.diff.map((line, i) => (
-							<div
-								key={i}
-								className={cn(
-									"flex items-center h-8 px-4 font-mono text-xs leading-none",
-									line.type === "added" &&
-										"bg-accent-green/10 text-accent-green",
-									line.type === "removed" && "bg-accent-red/10 text-accent-red",
-									line.type === "context" && "text-text-secondary",
-								)}
-							>
-								<span className="w-6 flex-shrink-0 opacity-50">
-									{line.type === "added"
-										? "+"
-										: line.type === "removed"
-											? "-"
-											: " "}
-								</span>
-								<pre className="m-0 whitespace-pre font-mono">
-									{line.content}
-								</pre>
+					{roast.improvements.map((improvement) => (
+						<div key={improvement.id} className="flex flex-col gap-4">
+							<p className="font-mono text-sm text-text-secondary">
+								{improvement.explanation}
+							</p>
+							<div className="rounded-lg border border-border-primary bg-bg-input overflow-hidden flex flex-col">
+								<div className="h-10 border-b border-border-primary px-4 flex items-center bg-bg-card/50">
+									<span className="font-mono text-xs text-text-secondary">
+										improved_code.{roast.language === "javascript" ? "js" : roast.language === "typescript" ? "ts" : "txt"}
+									</span>
+								</div>
+								<CodeBlock
+									code={improvement.improvedCode}
+									lang={roast.language}
+									showLineNumbers
+									className="rounded-none border-none bg-transparent"
+								/>
 							</div>
-						))}
-					</div>
-				</div>
-			</section>
+						</div>
+					))}
+				</section>
+			)}
 		</main>
 	);
 }
